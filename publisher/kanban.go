@@ -11,8 +11,8 @@ import (
 
 type KanbanMove struct {
 	ID       int `json:"id"`
-	RowID    int `json:"rowId"`
-	ColumnID int `json:"columnId"`
+	RowID    int `json:"row"`
+	ColumnID int `json:"column"`
 	Before   int `json:"before"`
 }
 
@@ -23,6 +23,11 @@ type KanbanEvent struct {
 	Column *kanbanStore.KanbanColumn `json:"column,omitempty"`
 	Move   *KanbanMove               `json:"move"`
 	Before int                       `json:"before"`
+}
+
+type KanbanMoveEvent struct {
+	EventBase
+	Move *KanbanMove `json:"card"`
 }
 
 type KanbanPublisher struct {
@@ -296,7 +301,7 @@ func (p *KanbanPublisher) DeleteColumn(ctx PublisherContext, id int, children []
 }
 
 func (p *KanbanPublisher) MoveCard(ctx PublisherContext, id, before, row, column int) error {
-	p.api.Events.Publish("cards", KanbanEvent{
+	p.api.Events.Publish("cards", KanbanMoveEvent{
 		EventBase: EventBase{
 			Widget: ctx.FromWidget,
 			Type:   "move-card",
