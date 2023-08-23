@@ -14,6 +14,7 @@ import (
 	"project-manager-go/publisher"
 	"project-manager-go/service"
 	ganttService "project-manager-go/service/gantt"
+	"project-manager-go/service/items"
 	kanbanService "project-manager-go/service/kanban"
 	schedulerService "project-manager-go/service/scheduler"
 	todoService "project-manager-go/service/todo"
@@ -81,6 +82,11 @@ func initApp(r *chi.Mux) {
 	projectsProcessor := data.NewProjectsProcessor()
 	projectsStore := data.NewProjectsStore(projectsProcessor)
 
+	// init abstract API
+	itemsPrefix := "/api/"
+	itemsService := items.NewBaseItemsService(treeService, projectsStore, itemsTreeStore)
+	itemsApi := api.NewBaseItemsAPI(itemsService, publisherApi, itemsPrefix)
+
 	// init todo API
 	todoPrefix := "/api/todo"
 	todoStoreObj := todoStore.InitTodoStore(itemsTreeStore, projectsStore)
@@ -110,7 +116,7 @@ func initApp(r *chi.Mux) {
 	ganttApiObj := api.NewGanttAPI(ganttServiceObj, ganttPublisherApiObj, publisherApi, ganttPrefix)
 
 	// add REST API of all widgets
-	serverApi.AddAPI(authApi, todoApiObj, schedulerApiObj, kanbanApiObj, ganttApiObj)
+	serverApi.AddAPI(itemsApi, authApi, todoApiObj, schedulerApiObj, kanbanApiObj, ganttApiObj)
 	// add WS API of all widgets
 	publisherApi.AddAPI(todoPublisherApiObj, schedulerPublisherApiObj, kanbanPublisherApiObj, ganttPublisherApiObj)
 

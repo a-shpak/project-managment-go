@@ -49,6 +49,13 @@ func (s *cards) Add(userCtx uCtx.UserContext, dbCtx *data.DBContext, card Card) 
 
 	id, err = s.store.Cards.Add(dbCtx, &card)
 
+	proj := int(card.RowID)
+	maxIndex, err := s.store.Cards.MaxBranchIndex(dbCtx, proj, 0)
+	if err != nil {
+		return 0, err
+	}
+	err = s.tree.Move(dbCtx, id, proj, 0, maxIndex+1)
+
 	return id, err
 }
 

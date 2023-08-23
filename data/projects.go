@@ -41,6 +41,22 @@ func (s *ProjectsStore) GetAll(ctx *DBContext, list IProjectsList) error {
 	return nil
 }
 
+func (s *ProjectsStore) GetFristId(ctx *DBContext) (int, error) {
+	project := Project{}
+	err := ctx.DB.
+		Order("`index` ASC").
+		Take(&project).
+		Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			err = nil
+		}
+		return 0, err
+	}
+
+	return project.ID, nil
+}
+
 func (s *ProjectsStore) GetLastId(ctx *DBContext) (int, error) {
 	project := Project{}
 	err := ctx.DB.

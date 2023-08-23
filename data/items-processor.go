@@ -20,9 +20,7 @@ func NewItemsProcessor() *ItemsProcessor {
 }
 
 func (p *ItemsProcessor) PushHandler(handlers ...ItemHandlerFunc) {
-	for i := range handlers {
-		p.handlers = append(p.handlers, handlers[i])
-	}
+	p.handlers = append(p.handlers, handlers...)
 }
 
 func (p *ItemsProcessor) Handle(ctx *DBContext, item *Item) error {
