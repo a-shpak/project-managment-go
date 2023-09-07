@@ -20,9 +20,7 @@ func NewProjectsProcessor() *ProjectsProcessor {
 }
 
 func (p *ProjectsProcessor) PushHandler(handlers ...ProjectHandlerFunc) {
-	for i := range handlers {
-		p.handlers = append(p.handlers, handlers[i])
-	}
+	p.handlers = append(p.handlers, handlers...)
 }
 
 func (p *ProjectsProcessor) Handle(ctx *DBContext, obj *Project) error {

@@ -39,6 +39,10 @@ func (s *cols) Update(userCtx context.UserContext, dbCtx *data.DBContext, id int
 	dbCtx = data.NewTCtx(dbCtx)
 	defer func() { err = dbCtx.End(err) }()
 
+	if upd.Label == "" {
+		return nil
+	}
+
 	col, err := s.store.Columns.GetOne(dbCtx, id)
 	if err != nil {
 		return err
