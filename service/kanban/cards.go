@@ -70,12 +70,12 @@ func (s *cards) Update(userCtx uCtx.UserContext, dbCtx *data.DBContext, id int, 
 	}
 	upd.Index = card.Index
 
-	if upd.StartDate == nil {
-		upd.StartDate = card.StartDate
-	}
-	if upd.EndDate == nil {
-		upd.EndDate = card.EndDate
-	}
+	// if upd.StartDate == nil {
+	// 	upd.StartDate = card.StartDate
+	// }
+	// if upd.EndDate == nil {
+	// 	upd.EndDate = card.EndDate
+	// }
 
 	err = s.store.Cards.Update(dbCtx, id, &upd)
 

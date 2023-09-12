@@ -27,8 +27,14 @@ func (t *Task) PutItem(item data.Item) {
 	t.StartDate = (*common.JDate)(item.StartDate)
 	t.Index = item.Index
 
-	duration := item.EndDate.Sub(*item.StartDate) / time.Hour / 24
-	t.Duration = int(duration + 1)
+	if item.EndDate != nil && item.StartDate != nil {
+		duration := item.EndDate.Sub(*item.StartDate) / time.Hour / 24
+		t.Duration = int(duration + 1)
+	} else {
+		item.StartDate = nil
+		t.StartDate = nil
+		t.Duration = 0
+	}
 }
 
 func (t Task) FillItem(item *data.Item) {
@@ -39,6 +45,10 @@ func (t Task) FillItem(item *data.Item) {
 	item.StartDate = (*time.Time)(t.StartDate)
 	item.Index = t.Index
 
-	calculatedEndDate := item.StartDate.Add(time.Hour * 24 * time.Duration(t.Duration))
-	item.EndDate = &calculatedEndDate
+	if !t.StartDate.IsEmpty() && t.Duration > 0 {
+		calculatedEndDate := item.StartDate.Add(time.Hour * 24 * time.Duration(t.Duration))
+		item.EndDate = &calculatedEndDate
+	} else {
+		item.StartDate = nil
+	}
 }

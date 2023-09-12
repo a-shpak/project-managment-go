@@ -2,7 +2,6 @@ package data
 
 import (
 	"errors"
-	"time"
 
 	"gorm.io/gorm"
 )
@@ -141,19 +140,19 @@ func (s *ItemsStore) HandleItemAddOperation(ctx *DBContext, item *Item) error {
 		item.ProjectID = project.ID
 	}
 
-	if item.StartDate == nil {
-		if item.EndDate != nil {
-			item.StartDate = item.EndDate
-		} else {
-			now := time.Now()
-			item.StartDate = &now
-		}
-	}
+	// if item.StartDate == nil {
+	// 	if item.EndDate != nil {
+	// 		item.StartDate = item.EndDate
+	// 	} else {
+	// 		now := time.Now()
+	// 		item.StartDate = &now
+	// 	}
+	// }
 
-	if item.EndDate == nil {
-		end := item.StartDate.Add(time.Hour * 24)
-		item.EndDate = &end
-	}
+	// if item.EndDate == nil {
+	// 	end := item.StartDate.Add(time.Hour * 24)
+	// 	item.EndDate = &end
+	// }
 
 	return nil
 }
